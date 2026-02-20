@@ -1,14 +1,46 @@
-import './index.css'
+import { useState } from 'react';
 
-export function Login() {
-    return (
-        <div className="h-screen w-screen bg-amber-100 flex items-center justify-center">
-            <div className="h-96 w-96 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center">
-                <h1 className="text-2xl font-bold mb-4">Login</h1>
-                <input type="text" placeholder="Username" className="mb-4 p-2 border border-gray-300 rounded" />
-                <input type="password" placeholder="Password" className="mb-4 p-2 border border-gray-300 rounded" />
-                <button className="bg-blue-500 text-white px-4 py-2 rounded">Login</button>
-            </div>
-        </div>
-    )
+export function Login({ onSwitchToRegister }) {
+  const [form, setForm] = useState({ email: '', password: '' });
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    alert(`Logged in as ${form.email} (demo)`);
+  };
+
+  return (
+    <section className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h1 className="mb-4 text-2xl font-bold text-slate-900">Login</h1>
+      <form className="grid gap-3" onSubmit={onSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          className="rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-200"
+          value={form.email}
+          onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-200"
+          value={form.password}
+          onChange={(event) => setForm((prev) => ({ ...prev, password: event.target.value }))}
+          required
+        />
+        <button
+          type="submit"
+          className="rounded-lg bg-teal-700 px-4 py-2 font-semibold text-white transition hover:bg-teal-800"
+        >
+          Login
+        </button>
+      </form>
+      <p className="mt-4 text-sm text-slate-600">
+        New here?{' '}
+        <button type="button" className="font-medium text-sky-700 transition hover:text-sky-900" onClick={onSwitchToRegister}>
+          Create account
+        </button>
+      </p>
+    </section>
+  );
 }
