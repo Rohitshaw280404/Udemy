@@ -1,17 +1,24 @@
 import { useState } from 'react';
 
-export function Login({ onSwitchToRegister }) {
+export function Login({ onSwitchToRegister, onLogin, loading }) {
   const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    alert(`Logged in as ${form.email} (demo)`);
+    setError('');
+    try {
+      await onLogin(form);
+    } catch (err) {
+      setError(err.message || 'Login failed');
+    }
   };
 
   return (
     <section className="mx-auto w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h1 className="mb-4 text-2xl font-bold text-slate-900">Login</h1>
       <form className="grid gap-3" onSubmit={onSubmit}>
+        {error ? <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
         <input
           type="email"
           placeholder="Email"
@@ -30,9 +37,10 @@ export function Login({ onSwitchToRegister }) {
         />
         <button
           type="submit"
+          disabled={loading}
           className="rounded-lg bg-teal-700 px-4 py-2 font-semibold text-white transition hover:bg-teal-800"
         >
-          Login
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
       <p className="mt-4 text-sm text-slate-600">

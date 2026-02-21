@@ -1,8 +1,8 @@
-export function Mycourse({ courses, onBrowseCourses }) {
+export function Mycourse({ enrollments, onBrowseCourses }) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h1 className="mb-4 text-3xl font-black tracking-tight text-slate-900">My Learning</h1>
-      {courses.length === 0 ? (
+      {enrollments.length === 0 ? (
         <div className="grid gap-3">
           <p className="text-slate-700">You have not enrolled in any course yet.</p>
           <button
@@ -24,11 +24,11 @@ export function Mycourse({ courses, onBrowseCourses }) {
             </tr>
           </thead>
           <tbody>
-            {courses.map((course) => (
-              <tr key={course.id}>
-                <td className="border-b border-slate-200 px-3 py-2 text-slate-800">{course.title}</td>
-                <td className="border-b border-slate-200 px-3 py-2 text-slate-700">{course.instructor}</td>
-                <td className="border-b border-slate-200 px-3 py-2 text-slate-700">In progress</td>
+            {enrollments.map((entry) => (
+              <tr key={entry._id}>
+                <td className="border-b border-slate-200 px-3 py-2 text-slate-800">{entry.course?.title}</td>
+                <td className="border-b border-slate-200 px-3 py-2 text-slate-700">{entry.course?.instructor?.name}</td>
+                <td className="border-b border-slate-200 px-3 py-2 text-slate-700">{entry.progress}%</td>
               </tr>
             ))}
           </tbody>

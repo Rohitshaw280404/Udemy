@@ -1,21 +1,33 @@
 import { useState } from 'react';
 
-export function Createcourse({ onAddLecture }) {
+export function Createcourse({ onCreateCourse, courses, selectedCourseId, onSelectCourse, onAddLecture, loading }) {
   const [form, setForm] = useState({
     title: '',
     category: '',
     description: '',
   });
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
-    alert(`Course '${form.title}' created (demo).`);
+    setError('');
+    setMessage('');
+    try {
+      await onCreateCourse(form);
+      setForm({ title: '', category: '', description: '' });
+      setMessage('Course created successfully');
+    } catch (err) {
+      setError(err.message || 'Failed to create course');
+    }
   };
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h1 className="mb-4 text-3xl font-black tracking-tight text-slate-900">Create Course</h1>
       <form className="grid gap-3" onSubmit={onSubmit}>
+        {error ? <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+        {message ? <p className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{message}</p> : null}
         <input
           type="text"
           placeholder="Course title"
@@ -42,9 +54,10 @@ export function Createcourse({ onAddLecture }) {
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="submit"
+            disabled={loading}
             className="rounded-lg bg-teal-700 px-4 py-2 font-semibold text-white transition hover:bg-teal-800"
           >
-            Save course
+            {loading ? 'Saving...' : 'Save course'}
           </button>
           <button
             type="button"
@@ -55,6 +68,22 @@ export function Createcourse({ onAddLecture }) {
           </button>
         </div>
       </form>
+
+      <div className="mt-6 grid gap-2">
+        <h2 className="text-lg font-semibold text-slate-900">Your Courses</h2>
+        <select
+          className="rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-teal-600 focus:ring-2 focus:ring-teal-200"
+          value={selectedCourseId}
+          onChange={(event) => onSelectCourse(event.target.value)}
+        >
+          <option value="">Select a course to manage lectures</option>
+          {courses.map((course) => (
+            <option key={course._id} value={course._id}>
+              {course.title}
+            </option>
+          ))}
+        </select>
+      </div>
     </section>
   );
 }

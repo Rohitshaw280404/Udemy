@@ -1,4 +1,8 @@
 export function Home({ featuredCourses, onBrowseCourses, onOpenCourse }) {
+  const getId = (course) => course._id || course.id;
+  const getInstructorName = (course) =>
+    typeof course.instructor === 'object' ? course.instructor?.name : course.instructor;
+
   return (
     <div className="grid gap-5">
       <section className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white via-cyan-50 to-amber-50 p-6 shadow-sm md:p-8">
@@ -23,16 +27,16 @@ export function Home({ featuredCourses, onBrowseCourses, onOpenCourse }) {
         <h2 className="mb-4 text-2xl font-bold text-slate-900">Featured Courses</h2>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {featuredCourses.map((course) => (
-            <article key={course.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <article key={getId(course)} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
               <h3 className="mb-1 text-lg font-semibold text-slate-900">{course.title}</h3>
-              <p className="mb-2 text-sm text-slate-600">{course.instructor}</p>
+              <p className="mb-2 text-sm text-slate-600">{getInstructorName(course)}</p>
               <p className="mb-3 text-slate-700">{course.description}</p>
               <div className="flex items-center justify-between gap-3">
                 <span className="font-semibold text-slate-900">${course.price}</span>
                 <button
                   type="button"
                   className="font-medium text-sky-700 transition hover:text-sky-900"
-                  onClick={() => onOpenCourse(course.id)}
+                  onClick={() => onOpenCourse(getId(course))}
                 >
                   View details
                 </button>
